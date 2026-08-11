@@ -1,0 +1,309 @@
+# Chapter 4 - File Management and Data Access
+
+## What We're Building
+
+Before we can analyse cytometry data, we need to organise our work properly. Think of this like setting up a laboratory - you need specific places for raw samples, processed data, and results. In R, we create a structured folder system and use tools that make file management consistent and portable.
+
+We'll accomplish three things:
+
+1. Create an organised folder structure for the course
+2. Set up an R Project so file paths work reliably
+3. Download and verify the course datasets
+
+## Version Notes
+
+**File hosting:** Course data is available via GitHub Releases (Zenodo planned as a backup once beta testing is complete)
+**Dataset structure:** One set of FCS files, already normalised, debarcoded, and gated to live singlets, plus a staged `RDS/` folder that lets you jump into any later chapter without rerunning earlier ones
+**Approach:** Uses R Projects and the `here` package for portable file paths
+
+## The Essentials {.essentials}
+
+### Step 1: Create Your Project Folder
+
+Create a folder on your computer where you have plenty of space (the datasets total about 400MB). Name it something clear like `Cytometry_R_Course`.
+
+**Where to create it:** Anywhere you can easily find it - Desktop, Documents, or a dedicated projects folder all work fine.
+
+### Step 2: Create an R Project
+
+An R Project is a special file that tells RStudio where your work lives. This makes file management much easier.
+
+1. Open RStudio
+2. Click File > New Project
+3. Choose "Existing Directory"
+4. Navigate to the folder you just created
+5. Click "Create Project"
+
+**What this does:** Creates a file ending in `.Rproj` in your folder. When you open this file, RStudio automatically sets your working directory correctly.
+
+### Step 3: Create Your Folder Structure with dir.create()
+
+Every chapter in this course reads and writes files using the `here` package, always relative to this structure:
+
+```
+Cytometry_R_Course/
+├── Cytometry_R_Course.Rproj
+├── Data/
+│   ├── fcs/                # 5 .fcs files, already normalised, debarcoded, and gated to live singlets
+│   ├── ungated/            # the same 5 samples before gating, only needed for the optional Gating chapter's demo
+│   ├── RDS/                # processed R objects, one file per pipeline stage
+│   └── other/              # catchall for peripheral/supporting files, e.g. sample_info.csv
+├── Scripts/                # empty for now - you'll add scripts here
+├── Figures/                # empty for now - plots get saved here
+├── Tables/                 # empty for now - summary tables get saved here
+└── Outputs/                # empty for now - diagnostic reports from packages like flowCut get saved here
+```
+
+`dir.create()` is a real, general-purpose skill, not just a course setup step. Any time you start a new analysis and want to stay on the command line rather than clicking through a file explorer, this is how you'll build your folder structure. Create all of it now:
+
+```{r create-folders}
+library(here)
+dir.create(here("Data", "RDS"), recursive = TRUE, showWarnings = FALSE)
+dir.create(here("Scripts"), showWarnings = FALSE)
+dir.create(here("Figures"), showWarnings = FALSE)
+dir.create(here("Tables"), showWarnings = FALSE)
+dir.create(here("Outputs"), showWarnings = FALSE)
+```
+
+### Step 4: Download This Course's Data
+
+This step is specific to this course, and it's a bit artificial: in your own future analyses, your `Data/fcs/` and `Data/other/` folders would fill up with your own instrument output, not a downloaded ZIP. Here, everyone needs to start from identical data, so we provide it as one package. We only give you the final, ready-to-use data, not every intermediate processing stage, so you're not stuck storing gigabytes you'll never use.
+
+Download the course datasets from: [GitHub release link to be added]
+
+**What you're downloading:** A ZIP file containing:
+
+- FCS files, already normalised, debarcoded, and gated to live singlets (`Data/fcs/`)
+- Peripheral/supporting files, e.g. sample metadata (`Data/other/`)
+- A starter set of provided RDS files (`Data/RDS/`), so you can jump ahead to any chapter
+
+Extract the ZIP file into the folder structure you just created with `dir.create()` above.
+
+**Note:** `Data/ungated/` isn't part of this main download. It's the same 5 samples before gating, only needed if you do the optional Gating chapter's (Chapter 7) hands-on demo, and is provided separately from there, since most learners won't need it.
+
+Two files you'll use throughout this course live in `Data/other/`: a metadata sheet, one row per sample, recording things like the experimental condition and patient ID, used to label results and compare conditions later. And a panel sheet, listing every channel on the instrument alongside the actual marker name it measures, used to turn cryptic metal-tag channel names like `Nd145Di` into readable marker names like `CD4`. Both get used starting in later chapters, we're introducing them here so their purpose is clear before that code shows up.
+
+### Step 5: Verify here() Works
+
+```{r check-here}
+here()
+```
+
+**Success looks like this (Windows):**
+```
+[1] "C:/Users/YourName/Documents/Cytometry_R_Course"
+```
+
+**Success looks like this (Mac):**
+```
+[1] "/Users/YourName/Documents/Cytometry_R_Course"
+```
+
+**Problem looks like this:**
+```
+[1] "C:/Users/YourName/Documents"
+```
+If the path stops one level too early, or shows somewhere unexpected like your Downloads folder, RStudio didn't open via the `.Rproj` file. Close RStudio, then double-click `Cytometry_R_Course.Rproj` in File Explorer to reopen it correctly.
+
+### Step 6: Verify Your Data
+
+Check that the datasets are in the right place:
+
+```{r verify-fcs}
+list.files(here("Data", "fcs"))
+```
+
+**Success looks like this:**
+```
+[1] "2PFANASPermLIVE.fcs" "4PFA1GLUTNASPermLIVE.fcs" "4PFANASPermLIVE.fcs" "4PFANoPermLIVE.fcs" "8PFANASPermLIVE.fcs"
+```
+
+**Problem looks like this:**
+```
+character(0)
+```
+An empty result like this means the files aren't in `Data/fcs/`. On Windows, double-check the ZIP extracted the files directly into that folder rather than into a nested subfolder, Windows' built-in extractor sometimes creates an extra folder level named after the ZIP file.
+
+You're now ready to load cytometry data in the next chapter.
+
+## A Deeper Dive {.deeper-dive}
+
+### Understanding Working Directories
+
+A "working directory" is R's current location in your computer's file system. It's like R's "you are here" marker. When you tell R to load a file, it looks in the working directory unless you specify a complete path.
+
+**Check your working directory:**
+```{r getwd, eval=FALSE}
+getwd()
+```
+
+**Why this matters:** If R is in the wrong place, it won't find your files. R Projects solve this by automatically setting the working directory to your project folder.
+
+### What R Projects Actually Do
+
+An R Project is a file that RStudio recognises. When you open a `.Rproj` file, RStudio:
+
+1. Sets the working directory to the project folder
+2. Remembers which files you had open
+3. Restores your previous workspace settings
+
+This means you can close RStudio, reopen the project later, and everything works exactly as before.
+
+### File Paths in R
+
+**Forward slashes vs backslashes:**
+Windows uses backslashes in file paths: `C:\Users\Name\Documents`
+R uses forward slashes: `C:/Users/Name/Documents`
+
+The backslash `\` is an "escape character" in R, it has special meaning in the programming language. Using forward slashes avoids confusion.
+
+**Absolute vs relative paths:**
+
+Absolute path, complete location from the drive root:
+```{r}
+"C:/Users/YourName/Documents/Cytometry_R_Course/Data/fcs"
+```
+
+Relative path, location from the current working directory:
+```{r}
+"Data/fcs"
+```
+
+Relative paths are portable - they work on any computer as long as the folder structure stays the same.
+
+### The here Package in Detail
+
+The `here` package builds file paths relative to your project root. This solves the portability problem.
+
+**Without here:**
+```{r, eval=FALSE}
+# This only works on your computer
+data <- read.csv("C:/Users/YourName/Cytometry_R_Course/Data/other/samples.csv")
+```
+
+**With here:**
+```{r, eval=FALSE}
+# This works on anyone's computer
+data <- read.csv(here("Data", "other", "samples.csv"))
+```
+
+**How here finds your project:**
+It looks for special files that indicate a project root:
+
+1. `.Rproj` files (highest priority)
+2. `.here` files
+3. `.git` folders (for version control)
+
+When you use `here()`, it builds paths starting from wherever it found one of these markers.
+
+**Building paths with here:**
+```{r}
+here()                                     # Project root
+here("Data")                               # Data folder
+here("Data", "fcs")                 # FCS subfolder
+here("Data", "fcs", "2PFANASPermLIVE.fcs")  # A specific file
+```
+
+R automatically adds the correct separators between each component.
+
+### Why Just One Version of the FCS Data?
+
+The `Data/fcs/` files you download are already normalised, debarcoded, and gated to live singlets, the final, ready-to-analyse state, not raw instrument output. We don't ship every intermediate processing stage (there can be several, each several times the size of the final files), just the data you'll actually work with throughout the course.
+
+The one exception is the Gating chapter, which demonstrates removing debris, doublets, and dead cells directly in R. That needs data which still has those events in it, so it uses its own separate example file, outside this project's folder structure entirely. The chapter itself tells you how to get that file when you reach it.
+
+### Why a Staged RDS Folder?
+
+Every processing step in this course, cleaning, gating, downsampling, transforming, clustering, saves its result as an RDS file in `Data/RDS/`, named to describe exactly what's been done to it (for example `ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET.rds` means cleaned, then downsampled, then arcsinh-transformed, in that order). We also ship a starter set of these files pre-made.
+
+This means you don't have to run every chapter in sequence to reach the one you're interested in. Want to jump straight to clustering? Load the RDS file that matches the state clustering expects, and go. The one exception is Chapters 1-5: those chapters teach you how to set up this folder structure and import data in the first place, so we don't hand you a pre-built version of them. Everything from Chapter 6 onward is fair game to skip into directly.
+
+### File Organisation Best Practices
+
+**Recommended structure for cytometry analysis:**
+```
+Project_Root/
+├── Data/
+│   ├── fcs/              # Original FCS files (never modify)
+│   ├── RDS/              # Processed R objects, one per pipeline stage
+│   └── other/            # Catchall for peripheral/supporting files
+├── Scripts/              # R code files
+├── Figures/              # Plots and visualisations
+├── Tables/               # Statistical summaries
+└── Outputs/              # Diagnostic reports from packages like flowCut
+```
+
+Keep this flat rather than nesting `Figures/` and `Tables/` inside a `Results/` folder. One less level to type in every `here()` call, and one less thing to get wrong.
+
+**Principles:**
+
+- Keep raw data separate and unmodified
+- Use clear, descriptive folder and file names
+- Group related files together
+- Make structure consistent across the whole course
+
+### Creating Folders and Files
+
+**Create a new folder:**
+```{r, eval=FALSE}
+dir.create(here("Scripts"))
+```
+
+**Create multiple folders at once:**
+```{r, eval=FALSE}
+dir.create(here("Figures"))
+dir.create(here("Tables"))
+```
+
+**Warning:** Creating and deleting files in R is permanent. There's no recycle bin or undo. When learning, it's safer to create folders manually in your file explorer.
+
+### Navigating Folders in R
+
+**List folders (directories) in current location:**
+```{r}
+list.dirs()
+```
+
+**List files in current location:**
+```{r}
+list.files()
+```
+
+**List only FCS files in a specific folder:**
+```{r}
+list.files(here("Data", "fcs"), pattern = ".fcs$")
+```
+
+The `pattern` argument uses a "regular expression," a pattern matching system. `.fcs$` means "files ending in .fcs".
+
+### Verifying Your Setup
+
+At this point, you should be able to:
+
+1. Open your `.Rproj` file and see RStudio start in your project
+2. Run `here()` and see your project path
+3. Run `list.files(here("Data", "fcs"))` and see 5 FCS files
+4. Confirm `Data/RDS/` exists (it will be empty until Chapter 5, unless you've already extracted our provided starter RDS files into it)
+5. Confirm `Scripts/`, `Figures/`, `Tables/`, and `Outputs/` all exist (also empty for now)
+
+If any of these checks fail, review the setup steps above.
+
+### Troubleshooting
+
+**Problem:** `here()` shows the wrong location
+**Solution:** Make sure you opened RStudio via the `.Rproj` file, not just opening RStudio directly
+
+**Problem:** `list.files()` shows nothing
+**Solution:** Check that you extracted the ZIP file to the correct location and that the folder name matches exactly (`fcs`, not `FCS` or `Fcs`)
+
+**Problem:** Files are in the wrong folders
+**Solution:** Manually move them using your file explorer to match the expected structure
+
+**Problem:** Path uses backslashes
+**Solution:** R automatically converts backslashes to forward slashes internally, this is normal
+
+### What's Next
+
+With your project organised and data verified, the next chapter will load cytometry files into R and introduce the data structures we'll use throughout the course.
+
+The file organisation you've created will support all subsequent analyses without requiring any path modifications.

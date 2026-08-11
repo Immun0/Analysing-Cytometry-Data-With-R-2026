@@ -1,0 +1,9 @@
+bookdown::bs4_book:
+  css: style.css
+  theme:
+    primary: "#295D90"
+# repo: removed 2026-08-11. bs4_book turns this into a "View source" link on every page,
+# and the repository is private, so every reader got a dead link. It also pointed at
+# blob/master while the branch is main. Restore it only if the repo is made public.
+
+#096B72

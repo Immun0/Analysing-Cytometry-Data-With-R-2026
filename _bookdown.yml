@@ -1,0 +1,28 @@
+book_filename: "Analysing-Cytometry-Data-with-R"
+# Without this list bookdown merges every .Rmd in the directory, which pulls in
+# Reference_Real_Working_Script_Helios4-2.Rmd as an eighteenth chapter and tries to
+# execute another user's analysis at knit time. Add new chapters here explicitly.
+rmd_files:
+  - index.Rmd
+  - 01-Introduction.Rmd
+  - 02-R-Environment-setup.Rmd
+  - 03-Packages.Rmd
+  - 04-File-Management.Rmd
+  - 05-Data-Import.Rmd
+  - 06-Data-Visualisation.Rmd
+  - 07-Data-Cleaning-1-Gating-Data.Rmd
+  - 08-Data-Cleaning-2-Channel-Names.Rmd
+  - 09-Data-Cleaning-3-Acquisition-Anomalies.Rmd
+  - 10-Downsampling.Rmd
+  - 11-Data-Transformation.Rmd
+  - 12-Extract-Expression-Data.Rmd
+  - 13-Data-Visualisation-Full.Rmd
+  - 14-Dimensionality-Reduction.Rmd
+  - 15-Clustering.Rmd
+  - 16-Statistics-and-Publication-Figures.Rmd
+new_session: true
+before_chapter_script: _common.R
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "

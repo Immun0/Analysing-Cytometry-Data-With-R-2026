@@ -1,0 +1,59 @@
+# Png files
+*.png
+
+# pdf files. Generated figures, some very large: channel_check_NxN_fallback.pdf is
+# 182 MB and umap_every_marker.pdf is 55 MB, against GitHub's 100 MB hard limit.
+*.pdf
+
+# fcs files
+*.fcs
+
+.Rproj.user
+*.rds
+.Rproj.user/shared/notebooks/5ACC4624-05-Data-Import/1/s/cvbs93xepojkh/00000f.csv
+*.rds
+*.rds
+.RData
+.RDataTmp
+.RDataTmp1
+._*
+.positai
+
+# --- added 2026-08-11, before the first commit of the finished book ---
+
+# Working documents. These are how the course was built, not course content.
+R_Course_PROJECT.md
+Open_Issues.md
+Finish_The_Course_Checklist.md
+Reference_immun0_live_site.md
+Scratch/
+
+# Other users' real analyses. Never publish these: they carry their sample names,
+# panels and metadata, and this repository is public.
+Reference_Real_Working_Script_*
+
+# RDS objects saved without a file extension, which *.rds above does not catch.
+# Five of them, about 70 MB: ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET and friends.
+Data/RDS/
+
+# Build output. The rendered book is published from core-principles, not from here.
+_book/
+_bookdown_files/
+
+# The old 2024-2026 history, parked here on 2026-08-11 when this folder was given a fresh
+# repo. It is an ordinary directory as far as git is concerned, so without this line
+# `git add -A` commits all 635 objects of it, about 1.2 GB.
+.git-archive-2024/
+
+# The empty staging repo created in error on 2026-08-11. It has its own .git, so git
+# records it as a submodule reference rather than files. Deleting the folder is pending.
+Analysing-Cytometry-Data-With-R-2026/
+
+# Session state, old drafts and root scratch files. These were untracked on 2026-08-11,
+# and without these lines the next commit-all would simply put them back.
+.Rhistory
+Draft Chapters/
+Outputs/
+Rtest.txt
+NxN Plotting.R
+Log Transform Testing.R
