@@ -3,7 +3,7 @@
 ## The Essentials {.essentials}
 
 1. Gate your files to exclude debris, doublets and dead cells with a software package like FlowJo, Cytobank or FCSExpress
-2. Export new fcs files that only include the `Live`, `Single` events into a new folder called 'Live Singlets'. Export a new file for every original file - we don't want a concatenated file (yet!). The ungated version of this course's 5 samples, to practice on, is available separately as noted in Chapter 4 (`Data/ungated/`), not part of the main data download. If you'd rather skip gating them yourself, the already-gated result is the same data already sitting in `Data/fcs/`, the main dataset every other chapter uses.
+2. Export new fcs files that only include the `Live`, `Single` events into a new folder called 'Live Singlets'. Export a new file for every original file - we don't want a concatenated file (yet!). The ungated version of this course's 5 samples, to practice on, is a separate download from the main dataset: [**ACDwR-ungated-data-v1.zip**](https://github.com/Immun0/Analysing-Cytometry-Data-With-R-2026/releases/download/Data/ACDwR-ungated-data-v1.zip) (82 MB). Extract it at your project root and it lands in `Data/ungated/`. If you'd rather skip gating them yourself, the already-gated result is the same data already sitting in `Data/fcs/`, the main dataset every other chapter uses.
 
 <span class="warning">For data analysis, it's essential to remove any confounding or extraneous events. In cytometry we want to get rid of dead cells and doublets. For high parameter analysis this is doubly important. The analysis is computationally taxing.  Removing irrelevant data helps speed up the analysis as well as improving its quality. </span>
 

@@ -36,7 +36,7 @@ saveRDS(EXPRESSION_DATA, here("Data", "RDS", "EXPRESSION_DATA.rds"))
 
 The expression matrix alone doesn't say which sample each row came from, that has to be added back in. The obvious way is to assume the metadata sheet and the flowSet are in the same order and pair them up position by position. Don't. Sample order is not a stable thing: Chapters 8 and 10 both reorder the flowSet, a file that fails QC gets dropped, a sheet gets re-sorted in Excel. Any of those and a positional pairing silently attaches the wrong labels to real cells. Join on the sample name instead, which survives all of it.
 
-The check worth running is not "are these in the same order" but "are these the same five samples at all":
+The check to run is not "are these in the same order" but "are these the same five samples at all":
 
 ```{r check-sample-order}
 setequal(sampleNames(ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET), metadata$sample_id)
@@ -91,7 +91,7 @@ head(EXPRESSION_DATA_SAMPLE_ID_MELTED)
 
 ### What Positional Joining Actually Does
 
-It is worth seeing this fail rather than taking the warning on trust, because the failure does not look like a failure. Build the labels both ways on the real data and compare.
+See it fail rather than take the warning on trust, because the failure does not look like a failure. Build the labels both ways on the real data and compare.
 
 ```{r positional-join-demo}
 n_cells <- fsApply(ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET, nrow)

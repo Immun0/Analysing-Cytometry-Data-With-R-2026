@@ -271,7 +271,7 @@ ggsave2(
 )
 ```
 
-Slower to write, slower to run (raw points rather than `ggpairs()`'s hexbin option, so the overplotting problem from earlier returns), and every marker pair gets its own axis labels rather than `ggpairs()`'s shared grid layout. Expect just under ten minutes on a recent laptop, measured on a MacBook Pro 16 with an M3, so give it time rather than assuming it has hung. But it depends on nothing beyond `ggplot2` itself, worth keeping in mind as a fallback, not a replacement.
+Slower to write, slower to run (raw points rather than `ggpairs()`'s hexbin option, so the overplotting problem from earlier returns), and every marker pair gets its own axis labels rather than `ggpairs()`'s shared grid layout. Expect just under ten minutes on a recent laptop, measured on a MacBook Pro 16 with an M3, so give it time rather than assuming it has hung. But it depends on nothing beyond `ggplot2` itself, so keep it in mind as a fallback, not a replacement.
 
 ### Taking Your Renamed Data Back Out of R
 

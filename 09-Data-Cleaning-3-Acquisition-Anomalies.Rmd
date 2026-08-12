@@ -150,7 +150,7 @@ Cleaning data happens in stages, and by this chapter three are done: gating to l
 
 `flowCut` and `flowAI` are the established tools, and this chapter used to be built around `flowCut`. A 2022 benchmark (Emmaneel et al., *Cytometry Part A*) tested `PeacoQC` against both across nine flow, three mass, and four spectral cytometry datasets. `PeacoQC` had the highest median balanced accuracy and scaled better to large files; `flowAI` tended to over-filter, removing more good data than necessary, and `flowCut`/`flowClean` sometimes missed anomalies the others caught.
 
-The mechanism is worth understanding, because it explains the results you'll see below. `PeacoQC`, from the same lab that built `FlowSOM`, finds density peaks per channel over time and flags events that fall too far from them. It runs two checks: an isolation tree (IT) analysis for abrupt events, and a mean-absolute-deviation (MAD) distance check. The first catches clogs and bubbles. The second catches gradual drift, signal creeping up or down across a run with no single dramatic moment.
+The mechanism explains the results you'll see below. `PeacoQC`, from the same lab that built `FlowSOM`, finds density peaks per channel over time and flags events that fall too far from them. It runs two checks: an isolation tree (IT) analysis for abrupt events, and a mean-absolute-deviation (MAD) distance check. The first catches clogs and bubbles. The second catches gradual drift, signal creeping up or down across a run with no single dramatic moment.
 
 That second check is the important one, and it's what `flowCut` doesn't act on.
 

@@ -78,7 +78,7 @@ heatmap
 
 ### Step 5: Bubble Plot of Median Expression
 
-The Step 4 heatmap and this bubble plot show the same `MEDIAN_EXPRESSION_DATA_SAMPLE_ID` data, just encoded differently, tile colour there, dot size and colour together here. Worth having both: a heatmap reads well as a whole grid at a glance, a bubble plot makes individual high/low values easier to compare precisely once you're looking closely at one marker or one sample. Needs melting to long format first, one row per marker/sample pair, since `geom_point()` expects that shape rather than the wide matrix `pheatmap()` took directly:
+The Step 4 heatmap and this bubble plot show the same `MEDIAN_EXPRESSION_DATA_SAMPLE_ID` data, just encoded differently, tile colour there, dot size and colour together here. Both are useful: a heatmap reads well as a whole grid at a glance, a bubble plot makes individual high/low values easier to compare precisely once you're looking closely at one marker or one sample. Needs melting to long format first, one row per marker/sample pair, since `geom_point()` expects that shape rather than the wide matrix `pheatmap()` took directly:
 
 ```{r bubble-plot, warning=FALSE}
 library(tidyr)

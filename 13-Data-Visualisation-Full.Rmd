@@ -103,7 +103,7 @@ ggsave2(here("Figures", "cd38_median_expression.png"), width = 11, height = 8.5)
 
 Look back at Chapter 9's cell-count bar chart, then at Step 2's density plot above. Both describe the same 5 samples. But Chapter 9 colours by the raw FCS filename (`2PFANASPermLIVE.fcs`), this chapter colours by `sample_id` or `condition`, a completely different label (`2%PFA - NAS PERM`, `2%PFA+NAS`). ggplot2 assigns default colours by alphabetical order of whatever labels are present in that specific plot, so even though both charts describe the same 5 samples, the colour-to-sample mapping in one chart has no relationship to the colour-to-sample mapping in the other. A reader can't glance between the two and know they're looking at the same sample by colour alone.
 
-That's worth fixing properly from here on: one fixed colour per sample, reused in every chapter going forward.
+Fix it properly from here on: one fixed colour per sample, reused in every chapter going forward.
 
 ### Building a Shared Colour Palette
 

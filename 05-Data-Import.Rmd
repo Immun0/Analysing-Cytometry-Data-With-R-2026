@@ -168,7 +168,7 @@ class(FLOWFRAME)
 
 `class(FLOWFRAME)` reports `"flowFrame"` directly, no flowSet ever existed in this version. Everything you'd do with `FLOWFRAME` from the Essentials section (`exprs()`, `markernames()`, `summary()`) works exactly the same way here, it's the same object type either way, just reached by a shorter path.
 
-**Why this course uses `read.flowSet()`, not `read.FCS()`:** if you go looking at `flowCore`'s own documentation, `read.FCS()` is the more basic, foundational function, `read.flowSet()` actually calls `read.FCS()` once per file internally and bundles the results together. So it's worth being clear about why this course defaults to the flowSet route from Chapter 5 onward rather than reading files individually: every downstream chapter, cleaning, transformation, clustering, statistics, needs to treat all 5 samples the same way at once, and `fsApply()` (the function that does that) only works on a flowSet, not on individual flowFrames. Reading one file at a time with `read.FCS()` would mean repeating every step 5 times by hand instead of once.
+**Why this course uses `read.flowSet()`, not `read.FCS()`:** if you go looking at `flowCore`'s own documentation, `read.FCS()` is the more basic, foundational function, `read.flowSet()` actually calls `read.FCS()` once per file internally and bundles the results together. So here is why this course defaults to the flowSet route from Chapter 5 onward rather than reading files individually: every downstream chapter, cleaning, transformation, clustering, statistics, needs to treat all 5 samples the same way at once, and `fsApply()` (the function that does that) only works on a flowSet, not on individual flowFrames. Reading one file at a time with `read.FCS()` would mean repeating every step 5 times by hand instead of once.
 
 ### Understanding Data Structures
 
@@ -206,7 +206,7 @@ This would actually raise an error, because `exprs()` verifies the replacement f
 
 ### Three Ways to Get a Piece Out of an Object
 
-You now have `FLOWSET`, one object holding all 5 of your files together. Very often you don't want the whole thing, you want just one file, or just a few files, or just one piece of information about it. R gives you three different tools for this, and they behave differently in ways that matter. Mixing them up is one of the most common beginner mistakes in R, so it's worth slowing down here.
+You now have `FLOWSET`, one object holding all 5 of your files together. Very often you don't want the whole thing, you want just one file, or just a few files, or just one piece of information about it. R gives you three different tools for this, and they behave differently in ways that matter. Mixing them up is one of the most common beginner mistakes in R, so slow down here.
 
 **Single brackets `[ ]`: take some files out, but keep them as a flowSet**
 

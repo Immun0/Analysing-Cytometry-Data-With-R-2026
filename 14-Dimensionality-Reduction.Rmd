@@ -332,9 +332,9 @@ file.exists(here("Figures", "umap_every_marker.pdf"))
 
 **Now go and open it.** `Figures/umap_every_marker.pdf`, ten pages, four markers each. This is the survey you use to work out what your populations are, and it is the input to the next section, where regions get named. Scroll through the whole thing once and note which markers localise and which are flat. That list is what you will annotate.
 
-`gg_save_pdf()` is worth keeping. `ggsave()` writes one plot to one file, so a 37-panel survey would be ten separate files to open and compare. Opening a PDF device, printing into it repeatedly and closing it puts everything in one document you can page through, which is how you actually read a survey like this.
+Keep `gg_save_pdf()`. `ggsave()` writes one plot to one file, so a 37-panel survey would be ten separate files to open and compare. Opening a PDF device, printing into it repeatedly and closing it puts everything in one document you can page through, which is how you actually read a survey like this.
 
-**A warning on file size.** That PDF is around 55 MB, because a PDF stores every one of the 25,000 points on every one of the 37 panels as its own vector object. If you need to email it or put it in a repository, either write a PNG instead, at the cost of not being able to zoom, or downsample with `sample_frac()` first as described further down. It is also worth checking that your `.gitignore` covers PDFs; this project's currently does not.
+**A warning on file size.** That PDF is around 55 MB, because a PDF stores every one of the 25,000 points on every one of the 37 panels as its own vector object. If you need to email it or put it in a repository, either write a PNG instead, at the cost of not being able to zoom, or downsample with `sample_frac()` first as described further down. Check that your `.gitignore` covers PDFs, as this project's does.
 
 `.data[[m]]` is how you tell `aes()` to use a column whose name is held in a variable. Older code uses `aes_string()` for this, which is deprecated and will eventually stop working.
 
@@ -365,7 +365,7 @@ nrow(UMAP_PERM)
 [1] 15000
 ```
 
-Worth checking rather than assuming, though, and it is one line. `table()` on the top 5% of a marker tells you whether its high cells belong to one condition or to all of them:
+Check rather than assume, though, and it is one line. `table()` on the top 5% of a marker tells you whether its high cells belong to one condition or to all of them:
 
 ```{r umap-marker-condition-check}
 hi <- UMAP_PERM[UMAP_PERM$Er168Di_CD71 >= quantile(UMAP_PERM$Er168Di_CD71, 0.95), ]
@@ -376,7 +376,7 @@ If a marker's positive cells come overwhelmingly from one condition, you are pro
 
 The second: any coordinates you write down belong to one seed on one machine. Rather than hard-coding numbers that will be wrong on your own data, find the region from the data itself:
 
-The obvious way to draw a gate is a rectangle around the high-expressing cells. Do not start there, and it is worth understanding why, because the failure is instructive. A bounding box assumes the cells you are gating form **one** blob. Take the top 10% of cells for a marker and box the middle 80% of them, and it works beautifully for a marker with one hot spot and falls apart completely for a marker with two: the box stretches across the gap between them and swallows every unstained cell in between.
+The obvious way to draw a gate is a rectangle around the high-expressing cells. Do not start there, because the failure is instructive. A bounding box assumes the cells you are gating form **one** blob. Take the top 10% of cells for a marker and box the middle 80% of them, and it works beautifully for a marker with one hot spot and falls apart completely for a marker with two: the box stretches across the gap between them and swallows every unstained cell in between.
 
 Cluster the high-expressing cells first, and the problem disappears. `dbscan` groups points by density, labels sparse points as noise, and does not need to be told how many groups to look for, which is exactly the property wanted here. A marker lighting up three islands gets three gates rather than one box over everything:
 
@@ -499,7 +499,7 @@ All 5,000 unpermeabilised cells, and four strays from another condition. One rec
 
 A translucent fill rather than an outline, because a filled gate reads as a region containing cells while an outline reads as a border between things. `alpha` controls the fill and the points stay visible through it, so you can still see what you have gated and what you have left out.
 
-Two habits worth taking from this. Get the coordinates from a printed table, not from squinting at the plot. And check the gate's contents afterwards, because a gate that looks right and a gate that is right are different things, and the `table()` above is the difference between the two.
+Two habits to take from this. Get the coordinates from a printed table, not from squinting at the plot. And check the gate's contents afterwards, because a gate that looks right and a gate that is right are different things, and the `table()` above is the difference between the two.
 
 Record the reason next to the coordinates. In six months the rectangle will still be in your script and the reason will not be.
 
@@ -555,7 +555,7 @@ The exact patch counts are not quoted here on purpose. They shift with the seed 
 
 None of the three overlaps another. On a projection built from every marker, the fixation protocol accounts for essentially all of the large-scale structure.
 
-**On `concavity`:** it controls how far the hull is allowed to bend inwards to follow the points. `concavity = 2` traces the islands closely; raise it and the hulls relax towards convex blobs that swallow the space between islands, which is exactly what you do not want here. It is worth trying a few values on your own data, because the right one depends on how tight your clusters are.
+**On `concavity`:** it controls how far the hull is allowed to bend inwards to follow the points. `concavity = 2` traces the islands closely; raise it and the hulls relax towards convex blobs that swallow the space between islands, which is exactly what you do not want here. Try a few values on your own data, because the right one depends on how tight your clusters are.
 
 **And the same caution as everywhere else in this section.** These hulls are drawn from the data, so unlike hand-typed coordinates they survive a re-run. What they do not survive is a change of seed or marker set, because then the patches themselves are different. Redraw, do not reuse.
 
