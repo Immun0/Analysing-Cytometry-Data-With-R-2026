@@ -75,8 +75,12 @@ saveRDS(EXPRESSION_DATA_SAMPLE_ID, here("Data", "RDS", "EXPRESSION_DATA_SAMPLE_I
 Most plotting and statistics want one row per cell per marker, not one row per cell with a column per marker. `pivot_longer()` reshapes it, and we attach each row's experimental condition from the metadata sheet at the same time:
 
 ```{r melt-and-add-condition}
+# Exclude the three columns that are not antigens: Time and Event_length come from the
+# instrument, and Original_ID was added by PeacoQC in Chapter 9 to track event indices.
+# Left in, they become "antigen" values and appear as facet panels in Chapter 13.
 EXPRESSION_DATA_SAMPLE_ID_MELTED <- tidyr::pivot_longer(EXPRESSION_DATA_SAMPLE_ID,
-  -sample_id, names_to = "antigen", values_to = "expression")
+  -c(sample_id, Time, Event_length, Original_ID),
+  names_to = "antigen", values_to = "expression")
 
 mm <- match(EXPRESSION_DATA_SAMPLE_ID_MELTED$sample_id, metadata$sample_id)
 EXPRESSION_DATA_SAMPLE_ID_MELTED$condition <- metadata$condition[mm]
