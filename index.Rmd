@@ -20,6 +20,11 @@ csl: chicago-fullnote-bibliography.csl
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(knitr.duplicate.label = "allow")
+
+# Regenerate Scripts/backup/ from the chapters at the start of every build, so the reader's
+# fallback scripts cannot drift out of step with what the book says. Wrapped in try()
+# because a failure to build the backups must never take the book down with it.
+try(source(here::here("Scripts", "make_backup_scripts.R")), silent = TRUE)
 ```
 
 # Preface and Notes

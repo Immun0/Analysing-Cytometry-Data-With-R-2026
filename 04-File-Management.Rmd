@@ -48,7 +48,7 @@ Cytometry_R_Course/
 │   ├── ungated/            # the same 5 samples before gating, only needed for the optional Gating chapter's demo
 │   ├── RDS/                # processed R objects, one file per pipeline stage
 │   └── other/              # catchall for peripheral/supporting files, e.g. sample_info.csv
-├── Scripts/                # empty for now - you'll add scripts here
+├── Scripts/                # your chapter scripts, plus the provided palette.R and backup/
 ├── Figures/                # empty for now - plots get saved here
 ├── Tables/                 # empty for now - summary tables get saved here
 └── Outputs/                # empty for now - diagnostic reports from packages like flowCut get saved here
@@ -79,11 +79,33 @@ Download the course datasets from: [**ACDwR-course-data-v1.zip**](https://github
 
 Extract the ZIP file into the folder structure you just created with `dir.create()` above.
 
+**Download the scripts too:** [**ACDwR-scripts-v1.zip**](https://github.com/Immun0/Analysing-Cytometry-Data-With-R-2026/releases/download/Data/ACDwR-scripts-v1.zip). It is tiny, and it extracts into the same folder. It holds two things:
+
+- `Scripts/palette.R`, one shared colour definition that Chapters 13 and 14 both load. Without it those chapters stop with a file-not-found error.
+- `Scripts/backup/`, a working script for every chapter from 3 to 16, generated from this book. This is a safety net, not your copy of the course. When your own script will not run, open both and find the line that differs. Chapters 1 and 2 have no code worth keeping in a file, which is why the numbering starts at 3.
+
 **Note:** `Data/ungated/` isn't part of this main download. It's the same 5 samples before gating, only needed if you do the optional Gating chapter's (Chapter 7) hands-on demo, and is provided separately from there, since most learners won't need it.
 
 Two files you'll use throughout this course live in `Data/other/`: a metadata sheet, one row per sample, recording things like the experimental condition and patient ID, used to label results and compare conditions later. And a panel sheet, listing every channel on the instrument alongside the actual marker name it measures, used to turn cryptic metal-tag channel names like `Nd145Di` into readable marker names like `CD4`. Both get used starting in later chapters, we're introducing them here so their purpose is clear before that code shows up.
 
-### Step 5: Verify here() Works
+### Step 5: Work in a Script, Not the Console
+
+Everything so far has gone into the Console. That was right for it: checking your R version is a one-off, and installing packages in Chapter 3 is something nobody keeps. Analysis is different. Console lines are not saved, so when you close RStudio they are gone, and with them any record of what you ran, in what order, and what you changed when something did not work.
+
+From here on, the code in this course goes in a script, and the script goes in the `Scripts/` folder you just created.
+
+1. **File > New File > R Script.** A pane opens at the top left, the Source pane.
+2. **File > Save**, navigate into `Scripts/`, and name it `04-File-Management.R`.
+3. Type or paste the code into the script rather than into the Console.
+4. Leave the cursor on the line you want and press **Ctrl+Enter** (Windows and Linux) or **Cmd+Enter** (Mac). The line runs in the Console below and the cursor drops to the next line. Select several lines first and the same keys run all of them in order.
+
+The Console has not gone anywhere. It still runs the code and prints the results and the errors. What changes is that the script keeps a copy, so tomorrow you open the file and re-run it instead of rebuilding it from memory.
+
+**Run the rest of this chapter from that script**, starting with Step 6 below. Then keep one script per chapter, named for the chapter, so `Scripts/05-Data-Import.R` is next.
+
+**Success check:** `Scripts/04-File-Management.R` exists, it is open in the Source pane, and pressing Ctrl+Enter on a line runs it in the Console below.
+
+### Step 6: Verify here() Works
 
 ```{r check-here}
 here()
@@ -105,7 +127,7 @@ here()
 ```
 If the path stops one level too early, or shows somewhere unexpected like your Downloads folder, RStudio didn't open via the `.Rproj` file. Close RStudio, then double-click `Cytometry_R_Course.Rproj` in File Explorer to reopen it correctly.
 
-### Step 6: Verify Your Data
+### Step 7: Verify Your Data
 
 Check that the datasets are in the right place:
 
@@ -284,7 +306,7 @@ At this point, you should be able to:
 2. Run `here()` and see your project path
 3. Run `list.files(here("Data", "fcs"))` and see 5 FCS files
 4. Confirm `Data/RDS/` exists (it will be empty until Chapter 5, unless you've already extracted our provided starter RDS files into it)
-5. Confirm `Scripts/`, `Figures/`, `Tables/`, and `Outputs/` all exist (also empty for now)
+5. Confirm `Scripts/`, `Figures/`, `Tables/`, and `Outputs/` all exist (`Figures/`, `Tables/` and `Outputs/` are empty for now)
 
 If any of these checks fail, review the setup steps above.
 
