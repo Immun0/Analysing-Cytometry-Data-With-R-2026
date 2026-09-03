@@ -78,7 +78,7 @@ flowsom_labels
   314  3580    82   409   843   622  1496 15257  2161   236
 ```
 
-`k = 10` is the number of populations you are asking for, not something the data decides. Cluster 8 holding 15,257 of the 25,000 cells is worth noticing rather than glossing over: a single cluster carrying 60% of your events usually means either that population genuinely dominates the sample, or that `k` is too low and something is being lumped together. Try `k = 15` and see whether cluster 8 splits into things that look biologically distinct.
+`k = 10` is the number of populations you are asking for, not something the data decides. Cluster 8 holding 15,257 of the 25,000 cells is worth noticing rather than glossing over: a single cluster carrying 61% of your events usually means either that population genuinely dominates the sample, or that `k` is too low and something is being lumped together. Try `k = 15` and see whether cluster 8 splits into things that look biologically distinct.
 
 Both `set.seed()` and the `seed` argument are needed here, and they do different jobs. The first fixes the SOM build, the second fixes the metaclustering. Miss either and you get a different answer each run.
 
@@ -174,7 +174,7 @@ Run Rphenograph DONE, totally takes 4.52 s
   -Number of clusters: 40
 ```
 
-**Forty clusters, from the same cells and the same six markers that gave FlowSOM ten.**
+**Forty clusters, from the same six markers that gave FlowSOM ten, and from 24,207 of those 25,000 cells once the duplicate rows were dropped.**
 
 That is not a disagreement about the biology, it is the difference between the two methods. FlowSOM's `k` is a number you chose: you asked for ten populations and it gave you ten, whether or not ten is right. Phenograph's `k` is the size of each cell's neighbourhood when the graph is built, and the number of communities falls out of the graph structure. Nobody asked for forty.
 
@@ -215,6 +215,7 @@ cluster_expression %>%
             by = "FlowSOM_cluster") %>%
   mutate(pct = round(100 * n / sum(n), 1),
          across(all_of(lineage_markers), ~ round(.x, 2))) %>%
+  rename_with(~ sub("^[A-Za-z0-9]+_", "", .x), all_of(lineage_markers)) %>%
   as.data.frame()
 ```
 
@@ -239,13 +240,13 @@ Now do the work the algorithm cannot. Take each row and ask what that combinatio
 
 **Cluster 2, CD34 high and CD90 absent.** Same progenitor compartment, one step down. Progenitors rather than stem cells, and there are ten times as many of them, which is also what you would expect.
 
-**Clusters 4, 5 and 6 are the same lineage caught at three stages, and this is the nicest thing in the table.** CD71 is the transferrin receptor, which erythroid cells need in quantity to take up iron for haemoglobin. CD235ab is glycophorin, which arrives later as the cell commits. So: cluster 4 is CD34 positive with CD71 climbing, an erythroid progenitor still carrying its stem marker. Cluster 5 has lost CD34 entirely, CD71 is higher still, glycophorin only just detectable. Cluster 6 has CD71 at its highest and glycophorin properly on. That is erythroid maturation, read straight off the medians, in a bone marrow sample where you would hope to find exactly that.
+**Clusters 4, 5 and 6 are the same lineage caught at three stages, and this is the nicest thing in the table.** CD71 is the transferrin receptor, which erythroid cells need in quantity to take up iron for haemoglobin. CD235ab is glycophorin, which arrives later as the cell commits. So: cluster 4 is CD34 positive with CD71 climbing, an erythroid progenitor still carrying its stem marker. Cluster 5 has CD34 down to 0.10, effectively gone, CD71 is higher still, glycophorin only just detectable. Cluster 6 has CD71 at its highest and glycophorin properly on. That is erythroid maturation, read straight off the medians, in a bone marrow sample where you would hope to find exactly that.
 
 **Cluster 9, CD41 high with CD49F.** CD41 is integrin alpha-IIb, the platelet and megakaryocyte marker. Megakaryocytic.
 
 Which leaves four clusters.
 
-**Cluster 8 is 61% of your cells and every marker is at zero.**
+**Cluster 8 is 61% of your cells and every marker sits at or below 0.24.**
 
 The clustering has not failed. Six markers are being asked to describe 25,000 bone marrow cells, and most of those cells are things this panel was never designed to see: mature lymphocytes, myeloid cells, anything without CD34, CD41 or an erythroid marker. The algorithm did its job and put them together correctly. There is simply nothing to call them.
 
