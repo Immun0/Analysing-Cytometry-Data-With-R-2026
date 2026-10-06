@@ -180,7 +180,7 @@ That is not a disagreement about the biology, it is the difference between the t
 
 So the two are answering different questions. FlowSOM answers "divide this into ten", Phenograph answers "how many groups are actually here, given how tightly cells cluster at this neighbourhood size". Run both and the gap between the answers tells you something: forty against ten suggests the ten are coarse, and that several of them contain real substructure. That is the same signal as cluster 8 holding 61% of the cells.
 
-**Modularity 0.91** is the graph's own measure of how well-separated those communities are, from 0 for no better than random to 1 for perfectly separated. 0.91 is high, which says the structure Phenograph found is real rather than an artefact of cutting a continuum into pieces.
+**Modularity 0.91** is the graph's own measure of how well-separated those communities are, from 0 for no better than random to 1 for perfectly separated. 0.91 is high, which says the partition describes the graph well. It does not say the communities are biological. Chapter 14 found the dominant structure in this dataset is protocol rather than biology, and modularity would score that split just as highly. Structure being real and structure being biological are two different claims, and only the second one needs the marker table below.
 
 Trying a few values of `k` (10, 20, 30) and comparing both the cluster count and the modularity is normal practice. There is no single correct value, and watching how both numbers move as you change it tells you more than any one run.
 
