@@ -27,7 +27,7 @@ options(knitr.duplicate.label = "allow")
 try(source(here::here("Scripts", "make_backup_scripts.R")), silent = TRUE)
 ```
 
-# Preface and Notes
+# Preface and Notes {-}
 
 Welcome to *Analysing Cytometry Data with R*
 

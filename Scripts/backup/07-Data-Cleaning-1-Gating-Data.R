@@ -76,7 +76,7 @@ gs_pop_get_count_fast(Gates)
 # After that we can get the stats for the gate we've just set up; in this case we'll check the percentages of the cells that are not beads or debris
 gs_pop_get_stats(Gates, "Non-Beads,Non-debris", type = "percent")
 
-# Finally we can check the hierarchy of the gates, recompute them to make sure the hierarchy is up to data....
+# Finally we can check the hierarchy of the gates, recompute them to make sure the hierarchy is up to date...
 gs_get_pop_paths(Gates)
 recompute(Gates)
 
@@ -93,7 +93,7 @@ autoplot(Gates, "Non-Beads,Non-debris", bins = 128) +
 ## ----Adjust our gates, warning=FALSE----------------------
 if ("/Non-Beads,Non-debris" %in% gs_get_pop_paths(Gates)) gs_pop_remove(Gates, "Non-Beads,Non-debris") # remove any leftover gate from a previous run of this chunk before re-adding
 R1 <- rectangleGate(filterId="Non-Beads,Non-debris", # Add back the gate with the new parameters
-"Ir191Di"=c(100, 20000), "Ce140Di"=c(-10, 10)) # Ce140Di reverted to 10 (the original, never-flagged-as-broken upper bound); real data only goes up to ~13.3, so 100 was excluding nothing
+"Ir191Di"=c(100, 20000), "Ce140Di"=c(-10, 10)) # real Ce140Di data only goes up to ~13.3, so an upper bound of 10 is what actually excludes the beads
 
 gs_pop_add(Gates, R1, parent = "root")
 gs_pop_get_count_fast(Gates)
@@ -107,19 +107,17 @@ autoplot(Gates, "Non-Beads,Non-debris") +
 # Once we're happy, we can create a new flowset with just this data in it
 NonDebris_FLOWSET <- cytoset_to_flowSet(gs_pop_get_data(Gates, "Non-Beads,Non-debris"))
 
-# Lets look at each of the samples in the new flowset for how many events are in each
+# Let's look at each of the samples in the new flowset for how many events are in each
 gs_pop_get_count_fast(Gates)
 
 
 ## ----event-length-ellipse---------------------------------
-autoplot(NonDebris_FLOWSET, x = "Event_length", y = "Ir191Di", bins = 48) # Event_length only takes 48 distinct values in this data, 256 bins spread that thin and looked faded
+autoplot(NonDebris_FLOWSET, x = "Event_length", y = "Ir191Di", bins = 48) # Event_length only takes 48 distinct values in this data, so 48 bins
 
-# Damian's exact bounds (2026-08-05), Event_length centre nudged right 10 units per Damian's request.
-
-mean_length <- c("Event_length" = 32, "Ir191Di" = 1225) # Event_length centre shifted right so xmin stays fixed at 7 while xmax rises
+mean_length <- c("Event_length" = 32, "Ir191Di" = 1225) # centre of the ellipse, one value per axis
 
 shape_length <- matrix(c(625, 0,
-                         0, 1755625), ncol = 2, dimnames = list(c("Event_length", "Ir191Di"), c("Event_length", "Ir191Di"))) # Event_length semi-axis 20 -> 25 (25^2 = 625), xmin unchanged at 7, xmax raised 47 -> 57
+                         0, 1755625), ncol = 2, dimnames = list(c("Event_length", "Ir191Di"), c("Event_length", "Ir191Di"))) # Event_length semi-axis 25 (25^2 = 625), so the ellipse runs from 7 to 57 on that axis
 
 R_length <- flowCore::ellipsoidGate(filterId = "event_length_singlets", .gate = shape_length, mean = mean_length)
 
@@ -130,7 +128,7 @@ recompute(Gates)
 gs_pop_get_count_fast(Gates)
 
 ggcyto(Gates, aes(x = "Event_length", y = "Ir191Di"), subset = "Non-Beads,Non-debris") +
-  geom_hex(bins = 48) + # matches Event_length's real 48 distinct values, 256 spread the same data too thin
+  geom_hex(bins = 48) + # matches Event_length's 48 distinct values
   geom_gate("event_length_singlets", col = "blue", fill = "red") +
   geom_stats(adjust = c(1.5, 1.5), abs = TRUE) +
   coord_cartesian(xlim = c(0, 75), ylim = c(0, 6000)) # zoomed out to comfortably show the full population and the full ellipse on a plain linear scale, nothing clipped, no transform distortion
@@ -155,12 +153,12 @@ plot_grid(as.ggplot(A1), as.ggplot(A2), ncol = 2)
 
 
 ## ----plot polygon gate, warning=FALSE---------------------
-#Our next gate will be a polygon gate to remove the doublets. We'll use Width and REsidual, the so-called Gaussian parameters to create
+#Our next gate will be a polygon gate to remove the doublets. We'll use Width and Residual, the so-called Gaussian parameters, to create it
 mat <- matrix(c(100,270,1000,1100,120,
                 100,920,520,170,45)
 , nrow = 5)
 
-# Rename the new matrix with the correct parameter naems for the gate
+# Rename the new matrix with the correct parameter names for the gate
 colnames(mat) <-c("Width", "Residual")
 
 # Create the gate
@@ -172,11 +170,11 @@ recompute(Gates)
 gs_pop_get_count_fast(Gates)
 # If you are ever unsure of your gating hierarchy you can always "plot()" the gating set to get a diagram
 plot(Gates)
-# Lets visualise the gat
+# Let's visualise the gate
 autoplot(Gates, "singlets1", x = "Width", y = "Residual", bins = 128)+
   scale_y_flowCore_fasinh() +
   scale_x_flowCore_fasinh()
-# Gate not quite the right shape so lets try again
+# Gate not quite the right shape so let's try again
 gs_pop_remove(Gates, 'singlets1')
 
 # Create matrix of co-ords to sketch in the gate
@@ -208,8 +206,8 @@ autoplot(NonDebris_FLOWSET, x = "Ir191Di", y = "Ir193Di", bins = 256) +
   scale_x_flowCore_fasinh()
 
 shape <- matrix(c(2045156,	3265186,
-3265186,	5815469), ncol = 2, dimnames = list(c("Ir191Di", "Ir193Di"), c("Ir191Di", "Ir193Di"))) # whole original matrix scaled by 0.25 (each semi-axis halved: variance x0.25, covariance x0.25) so the shape and rotation are identical to before, just smaller, centre unchanged
-mean <- c("Ir191Di"= 1570, "Ir193Di"=2500) # Ir191Di reverted back to 1570, Ir193Di down 500 (3000 -> 2500) per Damian, shape untouched
+3265186,	5815469), ncol = 2, dimnames = list(c("Ir191Di", "Ir193Di"), c("Ir191Di", "Ir193Di"))) # covariance matrix: the diagonal sets the ellipse's width on each axis, the off-diagonal its tilt
+mean <- c("Ir191Di"= 1570, "Ir193Di"=2500) # centre of the ellipse
 
 R3 <- flowCore::ellipsoidGate(filterId="singlets2",
 .gate = shape, mean = mean)
@@ -224,7 +222,7 @@ ggcyto(Gates, aes("191", "193"), subset = "singlets1") +
   geom_hex(bins = 256) +
   geom_gate("singlets2", col = "blue", fill = "red") +
   geom_stats(adjust = c(1.5, 1.5), abs = TRUE) +
-  coord_cartesian(xlim = c(0, 8000), ylim = c(0, 12000)) # linear scale, wide view: log10 was warping this tilted ellipse into two near-straight lines instead of a closed oval, same issue as the event_length ellipse
+  coord_cartesian(xlim = c(0, 8000), ylim = c(0, 12000)) # linear scale, wide view: a log scale warps a tilted ellipse out of shape, same as the event_length ellipse
 
 Singlets2_FLOWSET <- gs_pop_get_data(Gates, "singlets2")
 
@@ -270,12 +268,12 @@ gs_pop_get_count_fast(Gates)
 autoplot(Gates, "LIVE", bins = 128) +
   scale_y_logicle()
 
-# Lets grab the data for the gated events; flowworkspace uses the cytoset rather than the flowSet...
+# Let's grab the data for the gated events; flowWorkspace uses the cytoset rather than the flowSet...
 LIVE_SINGLET_FLOWSET <- gs_pop_get_data(Gates, "LIVE")
 # ... so we'll convert it to a flowSet ready to use for our downstream analyses
 LIVE_SINGLET_FLOWSET <- cytoset_to_flowSet(LIVE_SINGLET_FLOWSET)
 
-# Finally lets save the LIVE_SINGLET_FLOWSET to the RDS folder so that we can use it in the next chapters
+# Finally let's save the LIVE_SINGLET_FLOWSET to the RDS folder so that we can use it in the next chapters
 saveRDS(LIVE_SINGLET_FLOWSET, here("Data","RDS", "LIVE_SINGLET_FLOWSET.rds"))
 
 

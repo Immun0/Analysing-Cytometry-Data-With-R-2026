@@ -49,7 +49,7 @@ ggsave2(here("Figures", "all_markers_ridgeplot.png"), width = 11, height = 8.5)
 library(dplyr)
 
 MEDIAN_CD34 <- EXPRESSION_DATA_SAMPLE_ID_MELTED %>%
-  filter(antigen == "Sm149Di_CD34") %>%
+  dplyr::filter(antigen == "Sm149Di_CD34") %>%
   group_by(sample_id, condition) %>%
   summarize(median_expression = median(expression), .groups = "drop")
 
@@ -65,7 +65,7 @@ ggsave2(here("Figures", "cd34_median_expression.png"), width = 11, height = 8.5)
 
 ## ----mfi-second-marker, warning=FALSE---------------------
 MEDIAN_CD38 <- EXPRESSION_DATA_SAMPLE_ID_MELTED %>%
-  filter(antigen == "Yb172Di_CD38") %>%
+  dplyr::filter(antigen == "Yb172Di_CD38") %>%
   group_by(sample_id, condition) %>%
   summarize(median_expression = median(expression), .groups = "drop")
 

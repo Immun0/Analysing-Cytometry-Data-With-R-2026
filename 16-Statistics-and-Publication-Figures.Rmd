@@ -78,7 +78,7 @@ heatmap
 
 ### Step 5: Bubble Plot of Median Expression
 
-The Step 4 heatmap and this bubble plot show the same `MEDIAN_EXPRESSION_DATA_SAMPLE_ID` data, just encoded differently, tile colour there, dot size and colour together here. Both are useful: a heatmap reads well as a whole grid at a glance, a bubble plot makes individual high/low values easier to compare precisely once you're looking closely at one marker or one sample. Needs melting to long format first, one row per marker/sample pair, since `geom_point()` expects that shape rather than the wide matrix `pheatmap()` took directly:
+The Step 4 heatmap and this bubble plot show the same `MEDIAN_EXPRESSION_DATA_SAMPLE_ID` data, just encoded differently, tile colour there, dot size and colour together here. Both are useful: a heatmap reads well as a whole grid at a glance, a bubble plot makes individual high/low values easier to compare precisely once you're looking closely at one marker or one sample. The data needs melting to long format first, one row per marker/sample pair, since `geom_point()` expects that shape rather than the wide matrix `pheatmap()` took directly:
 
 ```{r bubble-plot, warning=FALSE}
 library(tidyr)
@@ -159,7 +159,7 @@ Y89Di_CD41..         should be   Y89Di_CD41   (with two trailing spaces you cann
 
 Two other antigens, `Er167Di_PU.1` and `Yb174Di_HA.11`, carry dots of their own. Those are correct and untouched, which is part of why this is easy to miss: the axis is a mixture of dots that belong and dots that do not.
 
-The figure is not wrong. Every score on it is correct, and the markers are in the right order. The labels are simply unfinished, and a figure with unfinished labels is not a publication figure.
+The figure is not wrong. Every score on it is correct, and the markers are in the right order. The labels are simply unfinished, and they need finishing before it goes in a paper.
 
 The cause is `data.frame()` on the line above the plot. It calls `check.names` by default, which rewrites anything that is not a legal R variable name: hyphens and spaces become dots, and the two trailing spaces on `Y89Di_CD41` become two more. You have already switched this off once in this chapter, at Step 5, for exactly the same reason. Here it is switched off again, and the plot rebuilt from the same numbers:
 
@@ -202,9 +202,9 @@ These tools answer different questions: MDS tells you which whole samples resemb
 
 ### Why the Labels Arrive Unfinished
 
-`check.names` is not a bug and it is not `data.frame()` being careless. It is R protecting itself. A data frame's column names are meant to be usable as variable names, and `Ki-67` is not one: R would read the hyphen as a minus sign and try to subtract 67 from an object called `Ki`. Spaces are worse. So `data.frame()` quietly substitutes dots, which are legal, and says nothing.
+`check.names` isn't a bug. R does it on purpose, to keep column names usable as variable names. A data frame's column names are meant to be usable as variable names, and `Ki-67` is not one: R would read the hyphen as a minus sign and try to subtract 67 from an object called `Ki`. Spaces are worse. So `data.frame()` quietly substitutes dots, which are legal, and says nothing.
 
-Quietly is the part worth remembering. There is no warning, no error, and nothing in the object to tell you it happened. The rename lands in the same class of problem as the positional join in Chapter 12: your analysis keeps running, the numbers stay correct, and something you did not authorise has changed underneath the results. Here it costs you a figure caption. In Chapter 12 it cost you the biology.
+The important part is that it does this quietly. There's no warning or error to tell you it happened. The rename lands in the same class of problem as the positional join in Chapter 12: your analysis keeps running, the numbers stay correct, and something you did not authorise has changed underneath the results. Here it only affects the figure labels, but in Chapter 12 the same kind of problem changed the biological result.
 
 It also has a second effect, which you may already have hit. The renamed columns no longer match the channel names in the flowSet, which still holds the originals, so a name that works against one object fails against the other:
 
@@ -214,7 +214,7 @@ It also has a second effect, which you may already have hit. The renamed columns
 ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET[, marker_cols]
 ```
 
-That is why Step 6 builds `marker_cols_flowset` from the flowSet's own `colnames()` rather than reusing `marker_cols`. Two objects, two spellings, and you have to know which one you are addressing. When in doubt, print `colnames()` of both and compare them.
+That is why Step 6 builds `marker_cols_flowset` from the flowSet's own `colnames()` rather than reusing `marker_cols`. The two objects spell these names differently, so you have to know which one you are addressing. When in doubt, print `colnames()` of both and compare them.
 
 ### Beyond sessionInfo(): renv
 

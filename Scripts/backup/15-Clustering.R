@@ -78,16 +78,29 @@ ggsave2(here("Figures", "flowsom_clusters.pdf"), width = 11, height = 8.5)
 ggsave2(here("Figures", "flowsom_clusters.png"), width = 11, height = 8.5)
 
 
-## ----cluster-abundance, warning=FALSE---------------------
+## ----cluster-abundance-table------------------------------
 cluster_counts <- table(sample_id = EXPRESSION_DATA_SAMPLE_ID_UMAPPED_TSNE$sample_id, FlowSOM_cluster = EXPRESSION_DATA_SAMPLE_ID_UMAPPED_TSNE$FlowSOM_cluster)
-cluster_percent <- prop.table(cluster_counts, margin = 1) * 100
-cluster_percent <- as.data.frame(cluster_percent)
+
+round(prop.table(cluster_counts, margin = 1) * 100, 1)
+
+
+## ----cluster-abundance, warning=FALSE---------------------
+cluster_percent <- as.data.frame(prop.table(cluster_counts, margin = 1) * 100)
 colnames(cluster_percent)[3] <- "percent"
 
+cluster_percent <- cluster_percent %>%
+  group_by(FlowSOM_cluster) %>%
+  mutate(vs_average = 100 * (percent - mean(percent)) / mean(percent)) %>%
+  ungroup()
+
 ggplot(cluster_percent, aes(x = sample_id, y = FlowSOM_cluster)) +
-  geom_point(aes(size = percent, colour = FlowSOM_cluster)) +
-  scale_colour_viridis_d() +
-  labs(x = "", y = "Cluster", size = "% of sample", colour = "Cluster") +
+  geom_point(aes(size = percent, colour = vs_average)) +
+  scale_size(range = c(3, 14)) +
+  scale_colour_gradient2(low = "#2166ac", mid = "grey85", high = "#b2182b", midpoint = 0,
+                         limits = c(-50, 50), oob = scales::squish,
+                         breaks = c(-50, -25, 0, 25, 50),
+                         labels = c("-50% or less", "-25%", "average", "+25%", "+50% or more")) +
+  labs(x = "", y = "Cluster", size = "% of sample", colour = "Against the\ncluster average") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -131,6 +144,7 @@ cluster_expression %>%
             by = "FlowSOM_cluster") %>%
   mutate(pct = round(100 * n / sum(n), 1),
          across(all_of(lineage_markers), ~ round(.x, 2))) %>%
+  rename_with(~ sub("^[A-Za-z0-9]+_", "", .x), all_of(lineage_markers)) %>%
   as.data.frame()
 
 
