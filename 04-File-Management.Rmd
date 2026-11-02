@@ -100,6 +100,10 @@ From here on, the code in this course goes in a script, and the script goes in t
 4. Leave the cursor on the line you want and press **Ctrl+Enter** (Windows and Linux) or **Cmd+Enter** (Mac). The line runs in the Console below and the cursor drops to the next line. Select several lines first and the same keys run all of them in order.
 5. If you would rather click, the **Run** button at the top right of the Source pane does exactly the same thing as Ctrl+Enter: it runs the current line, or the lines you have selected.
 
+```{r rstudio-run-button, echo=FALSE, fig.cap="The red box highlights the Run button, at the top right of the script. Here the Console has been moved to the top right; on a fresh install it sits below the script.", out.width="100%", fig.align='center'}
+knitr::include_graphics(here::here("Images", "RStudio_Run_Button.png"))
+```
+
 Typing in the script does nothing on its own until you send a line to the Console with Ctrl+Enter or Run. When you do, you will see the line appear in the Console after the `>` prompt, exactly as if you had typed it there, with its result or error underneath. If a result you expected never appears, check the Console first: the line may not have been sent.
 
 The Console has not gone anywhere. It still runs the code and prints the results and the errors. What changes is that the script keeps a copy, so tomorrow you open the file and re-run it instead of rebuilding it from memory.
