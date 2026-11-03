@@ -6,6 +6,8 @@ UMAP and tSNE show you structure, but they don't assign labels. This chapter run
 
 ## The Essentials {.essentials}
 
+> **Stuck?** This chapter starts from `Data/RDS/EXPRESSION_DATA_SAMPLE_ID_UMAPPED_TSNE.rds`, made in Chapter 14. If the first chunk below errors, or Chapter 14's checkpoint didn't match, copy that file from the course data download over your own, then carry on from here.
+
 ### Step 1: Load Required Packages and Data
 
 ```{r load-packages-clustering}

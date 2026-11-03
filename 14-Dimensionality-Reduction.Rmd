@@ -6,6 +6,8 @@ Cytometry data has many dimensions, one per marker. Dimensionality reduction tec
 
 ## The Essentials {.essentials}
 
+> **Stuck?** This chapter starts from `Data/RDS/EXPRESSION_DATA_SAMPLE_ID.rds`, made in Chapter 12. If the first chunk below errors, or Chapter 12's checkpoint didn't match, copy that file from the course data download over your own, then carry on from here.
+
 ### Step 1: Load Required Packages and Data
 
 ```{r load-packages-dimred}
@@ -207,6 +209,15 @@ ggplot(EXPRESSION_DATA_SAMPLE_ID_UMAPPED_TSNE_LINEAGE, aes(x = tsne1_lineage, y 
 
 ggsave2(here("Figures", "tsne_lineage_markers.pdf"), width = 11, height = 8.5)
 ggsave2(here("Figures", "tsne_lineage_markers.png"), width = 11, height = 8.5)
+```
+
+**Check before you move on.** This reads back the file the next chapter loads and prints a few facts about it. Your numbers should match the ones printed here. If they don't, something earlier in this chapter went wrong: go back over it, or use the **Stuck?** note at the top of the next chapter.
+
+```{r checkpoint-ch14}
+CHECK <- readRDS(here::here("Data", "RDS", "EXPRESSION_DATA_SAMPLE_ID_UMAPPED_TSNE.rds"))
+dim(CHECK)                                                # Cells, columns
+c("UMAP1", "UMAP2", "tsne1", "tsne2") %in% colnames(CHECK)  # Should be four TRUEs
+rm(CHECK)
 ```
 
 ## A Deeper Dive {.deeper-dive}
