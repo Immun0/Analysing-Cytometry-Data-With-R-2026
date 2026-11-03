@@ -45,6 +45,14 @@ saveRDS(FLOWSET, here("Data", "RDS", "FLOWSET.rds"))
 file.exists(here("Data", "RDS", "FLOWSET.rds"))
 
 
+## ----checkpoint-ch5---------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "FLOWSET.rds"))
+length(CHECK)          # Number of samples
+fsApply(CHECK, nrow)   # Cells in each sample
+ncol(CHECK[[1]])       # Number of channels
+rm(CHECK)
+
+
 ## ----read-fcs-single--------------------------------------
 FLOWFRAME <- read.FCS(here("Data", "fcs", "2PFANASPermLIVE.fcs"))
 class(FLOWFRAME)

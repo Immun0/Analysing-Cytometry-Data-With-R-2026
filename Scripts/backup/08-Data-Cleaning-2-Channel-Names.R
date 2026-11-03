@@ -87,6 +87,14 @@ colnames(Reordered_RENAMED_FLOWSET)
 saveRDS(Reordered_RENAMED_FLOWSET, file = here::here("Data", "RDS", "Reordered_RENAMED_FLOWSET.rds"))
 
 
+## ----checkpoint-ch8---------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "Reordered_RENAMED_FLOWSET.rds"))
+length(CHECK)          # Number of samples
+fsApply(CHECK, nrow)   # Cells in each sample
+ncol(CHECK[[1]])       # Number of channels
+rm(CHECK)
+
+
 ## ----ggpairs-nxn, warning=FALSE---------------------------
 library(GGally)
 EXPRS_DF <- as.data.frame(

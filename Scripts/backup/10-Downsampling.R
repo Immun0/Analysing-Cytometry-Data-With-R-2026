@@ -79,6 +79,14 @@ pData(Reordered_DOWNSAMPLED_CLEANED_FLOWSET)$name <- sampleNames(Reordered_DOWNS
 saveRDS(Reordered_DOWNSAMPLED_CLEANED_FLOWSET, here("Data", "RDS", "Reordered_DOWNSAMPLED_CLEANED_FLOWSET.rds"))
 
 
+## ----checkpoint-ch10--------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "Reordered_DOWNSAMPLED_CLEANED_FLOWSET.rds"))
+length(CHECK)          # Number of samples
+fsApply(CHECK, nrow)   # Cells in each sample
+ncol(CHECK[[1]])       # Number of channels
+rm(CHECK)
+
+
 ## ----downsample-too-small, eval=FALSE---------------------
 # set.seed(1234)
 # Downsample_filter_small <- sampleFilter(size = 500, filterId = "dsFilterSmall")

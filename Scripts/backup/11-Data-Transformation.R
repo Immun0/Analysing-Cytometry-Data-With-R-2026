@@ -59,6 +59,14 @@ ggsave2(here("Figures", "arcsinh_transform_comparison.pdf"), width = 11, height 
 ggsave2(here("Figures", "arcsinh_transform_comparison.png"), width = 11, height = 8.5)
 
 
+## ----checkpoint-ch11--------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET.rds"))
+length(CHECK)          # Number of samples
+fsApply(CHECK, nrow)   # Cells in each sample
+ncol(CHECK[[1]])       # Number of channels
+rm(CHECK)
+
+
 ## ----wrong-cofactor-demo, warning=FALSE-------------------
 WRONG_COFACTOR_FLOWSET <- fsApply(Reordered_DOWNSAMPLED_CLEANED_FLOWSET, function(x, cofactor = 150) {
   expr <- exprs(x)

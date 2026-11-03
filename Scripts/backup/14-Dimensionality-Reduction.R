@@ -149,6 +149,13 @@ ggsave2(here("Figures", "tsne_lineage_markers.pdf"), width = 11, height = 8.5)
 ggsave2(here("Figures", "tsne_lineage_markers.png"), width = 11, height = 8.5)
 
 
+## ----checkpoint-ch14--------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "EXPRESSION_DATA_SAMPLE_ID_UMAPPED_TSNE.rds"))
+dim(CHECK)                                                # Cells, columns
+c("UMAP1", "UMAP2", "tsne1", "tsne2") %in% colnames(CHECK)  # Should be four TRUEs
+rm(CHECK)
+
+
 ## ----umap-seed-stability, warning=FALSE-------------------
 seed_plot <- function(s) {
   set.seed(s)

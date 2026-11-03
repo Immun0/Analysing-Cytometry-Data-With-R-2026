@@ -101,6 +101,14 @@ ggsave2(here("Figures", "cleaning_counts_before_after.pdf"), width = 11, height 
 ggsave2(here("Figures", "cleaning_counts_before_after.png"), width = 11, height = 8.5)
 
 
+## ----checkpoint-ch9---------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "CLEANED_FLOWSET.rds"))
+length(CHECK)          # Number of samples
+fsApply(CHECK, nrow)   # Cells in each sample
+ncol(CHECK[[1]])       # Number of channels
+rm(CHECK)
+
+
 ## ----flowCut-cleaning, warning=FALSE, message=FALSE-------
 if(!require(flowCut)) BiocManager::install("flowCut")
 library(flowCut)

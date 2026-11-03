@@ -57,6 +57,15 @@ saveRDS(EXPRESSION_DATA_SAMPLE_ID_MELTED, here("Data", "RDS", "EXPRESSION_DATA_S
 head(EXPRESSION_DATA_SAMPLE_ID_MELTED)
 
 
+## ----checkpoint-ch12--------------------------------------
+CHECK <- readRDS(here::here("Data", "RDS", "EXPRESSION_DATA_SAMPLE_ID.rds"))
+dim(CHECK)              # Cells, columns
+table(CHECK$sample_id)  # Cells in each sample
+CHECK <- readRDS(here::here("Data", "RDS", "EXPRESSION_DATA_SAMPLE_ID_MELTED.rds"))
+dim(CHECK)              # Rows, columns of the long version
+rm(CHECK)
+
+
 ## ----positional-join-demo---------------------------------
 n_cells <- fsApply(ARCSINH_DOWNSAMPLED_CLEANED_FLOWSET, nrow)
 
